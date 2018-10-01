@@ -1,6 +1,11 @@
 @import url(picon/LCTPicon.css);
+@import url(fira-code/fira_code.css);
+
+@import url(highlight/styles/foundation.css);
 
 $green: #46AF6D;
+
+$max-width: 1400;
 
 * {
     margin: 0;
@@ -20,11 +25,34 @@ h1 {
 
     &.light {
         font-weight: 200;
+
+        b {
+            font-weight: 400;
+        }
+    }
+
+    &.low {
+        margin-top: 80px;
     }
 
     &.color {
         color: $green;
     }
+}
+
+a {
+    text-decoration: none;
+}
+
+pre code {
+    font-family: "Fira Code", monospace;
+    font-feature-settings: "calt" 1;  /* Enable ligatures for IE 10+, Edge */
+    text-rendering: optimizeLegibility; /* Force ligatures for Webkit, Blink, Gecko */
+    font-size: 0.7em;
+}
+
+.hljs {
+    background-color: white;
 }
 
 .transition {
@@ -33,7 +61,8 @@ h1 {
 
 div#strip {
     background: white;
-    max-width: 1040px;
+    //max-width: 1040px;
+    max-width: $max-width;
     min-height: 100%;
     margin: auto;
     text-align: center;
@@ -87,15 +116,18 @@ div.logo {
 
 div#header {
     height: 585px;
+    background-color: $green;
     background-image: url('imgs/header-background.svg');
     background-size: 1040px;
+    background-repeat: no-repeat;
+    background-position: left center;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     position: fixed;
     width: 100%;
-    max-width: 1040px;
+    max-width: $max-width;
     top: 0;
     overflow: hidden;
     cursor: default;
@@ -170,6 +202,31 @@ div#header {
 span#header-shadow {
     display: block;
     height: 620px;
+}
+
+p.description {
+    font-weight: 300;
+    margin: 20px 10px 60px 10px;
+}
+
+p.main-links {
+    a {
+        border: solid #EF822B 2px;
+        display: inline-block;
+        padding: 9px 22px 6px 22px;
+        border-radius: 6px;
+        color: #EF822B;
+        margin: 0 10px;
+        text-decoration: none;
+        font-size: 1em;
+        font-weight: 400;
+        transition: background-color 0.2s, color 0.2s;
+
+        &:hover {
+            background-color: #EF822B;
+            color: white;
+        }
+    }
 }
 
 div#cards {
@@ -281,6 +338,116 @@ div.about {
     }
 }
 
+div#samples {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0 0 10px 0;
+    margin: 120px 10px 60px 10px;
+
+    div.sample {
+        text-align: left;
+        flex: 1;
+        min-width: 450px;
+        margin: 5px;
+        background-color: #ededed;
+        border-radius: 2px;
+        box-shadow: 0 0 2px gray;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+
+        h2 {
+            color: #EF822B;
+            font-size: 1.55em;
+            font-weight: 400;
+            width: 100%;
+            margin-bottom: 10px;
+
+            b {
+                font-weight: 300;
+            }
+        }
+
+        p {
+            font-weight: 300;
+            font-size: 0.8em;
+            margin-bottom: 20px;
+        }
+
+        pre {
+            flex: 1;
+            background-color: white;
+            border-radius: 5px;
+            border: solid #cccccc 1px;
+            flex-direction: column;
+
+            code {
+                background-color: white;
+                margin: 15px;
+            }
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            flex: 1 auto;
+
+            .choice {
+                display: flex;
+                flex-direction: column;
+                flex: 1 auto;
+            }
+        }
+
+        div.links {
+            margin: 20px 2px;
+            a {
+                border: solid #EF822B 2px;
+                display: inline-block;
+                padding: 6px 15px 4px 15px;
+                border-radius: 6px;
+                color: #EF822B;
+                text-decoration: none;
+                font-size: 0.6em;
+                font-weight: 600;
+                transition: background-color 0.2s, color 0.2s;
+
+                &:hover {
+                    background-color: #EF822B;
+                    color: white;
+                }
+            }
+        }
+
+        .tabs {
+            display: flex;
+            flex-direction: row;
+            margin-left: 1em;
+
+            h3 {
+                font-weight: 500;
+                font-size: 0.7em;
+                //margin-right: 1em;
+                margin-bottom: -1px;
+                z-index: 1;
+                padding: 0.5em 0.9em 0.2em 0.9em;
+                border-radius: 5px 5px 0 0;
+                cursor: pointer;
+                border: solid transparent 1px;
+                border-bottom: 0;
+
+                &.selected {
+                    border: solid #cccccc 1px;
+                    border-bottom: 0;
+                    background-color: white;
+                }
+            }
+        }
+    }
+}
+
 div#footer {
     position: fixed;
     bottom: 0;
@@ -292,7 +459,7 @@ div#footer {
     background: linear-gradient(135deg, #e8441f 0%,#921f81 100%);
     height: 350px;
     width: 100%;
-    max-width: 1040px;
+    max-width: $max-width;
     overflow: hidden;
 
     div.logo {

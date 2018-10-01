@@ -1,0 +1,298 @@
+<html>
+<head>
+    <!--&lt;!&ndash; Global site tag (gtag.js) - Google Analytics &ndash;&gt;-->
+    <!--<script async src="https://www.googletagmanager.com/gtag/js?id=UA-119313091-1"></script>-->
+    <!--<script>-->
+    <!--window.dataLayer = window.dataLayer || [];-->
+    <!--function gtag(){dataLayer.push(arguments);}-->
+    <!--gtag('js', new Date());-->
+    <!--gtag('config', 'UA-119313091-1');-->
+    <!--</script>-->
+
+    <title>Kodein DI</title>
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <link rel="icon" href="../imgs/KodeinFramework_fav.png" />
+    <script type="text/javascript" src="../out/kotlin.js"></script>
+    <script type="text/javascript" src="../out/app.js"></script>
+    <script type="text/javascript" src="../highlight/highlight.pack.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+</head>
+<body>
+<div id="strip" style="display: none">
+    <div id="header" data-height="360" style="background-color: #EF822B">
+        <div id="menu">
+            <a class="" href="https://github.com/Kodein-Framework/Kodein-DI">GITHUB</a>
+            <a class="" href="..">KODEIN FRAMEWORK</a>
+        </div>
+        <div class="logo">
+            <img class="logo-img" alt="kodein logo" src="../imgs/logo-white.svg" />
+            <div>
+                <h1><a class="goto" href="#">KODEIN<span>DI</span></a></h1>
+                <h2>painless <img src="../imgs/kotlin-white.svg" /> dependency injection</h2>
+            </div>
+        </div>
+    </div>
+    <span id="header-shadow" style="height: 360px"></span>
+
+    <h1 class="low light"><b>KO</b>tlin <b>DE</b>pendency <b>IN</b>jection for all platforms</h1>
+
+    <p class="description">
+        Kodein is a very simple and yet very useful pure Kotlin dependency retrieval container.<br /> It is very easy to use and configure.
+    </p>
+
+    <p class="main-links">
+        <a href="http://kodein.org/Kodein-DI/index.html?latest/getting-started">GET STARTED</a>
+        <a href="http://kodein.org/Kodein-DI/index.html?latest/core">CORE DOCUMENTATION</a>
+    </p>
+
+    <div id="samples">
+        <div class="sample">
+            <h2>Declare bindings</h2>
+            <p>with a dead simple DSL</p>
+            <pre><code class="kotlin">
+                // Given some classes
+                class Controller(val service : IService)
+                interface IService
+                class BusinessService() : IService
+
+                // declare bindings
+                val kodein = Kodein {
+                    bind() from singleton { Controler(instance()) }
+                    bind&lt;IService&gt;() with singleton { BusinessService() }
+                }
+            </code></pre>
+
+            <div class="links">
+                <a href="http://kodein.org/Kodein-DI/index.html?latest/core#declaring-dependencies">BINDINGS DOCUMENTATION</a>
+            </div>
+        </div>
+
+        <div class="sample">
+            <h2>Create modules</h2>
+            <p>to properly separate reponsibilities</p>
+            <pre><code class="kotlin">
+                // ui/module.kt
+                val uiModule = Kodein.Module {
+                    bind() from singleton { Controler(instance()) }
+                }
+
+                // business/module.kt
+                val businessModule = Kodein.Module {
+                    bind&lt;IService&gt;() with singleton { BusinessService() }
+                }
+
+                // main.kt
+                val kodein = Kodein {
+                    import(uiModule)
+                    import(businessModule)
+                }
+            </code></pre>
+            <div class="links">
+                <a href="http://kodein.org/Kodein-DI/index.html?latest/core#_modules">MODULES DOCUMENTATION</a>
+            </div>
+        </div>
+
+        <div class="sample">
+            <h2>Your choice : contained or global</h2>
+            <p>contain your dependencies or use a global repository</p>
+            <div class="choices">
+                <div class="choice">
+                    <h3>CONTAINED</h3>
+                    <pre><code class="kotlin">
+                        val kodein = Kodein {
+                            import(uiModule)
+                            import(businessModule)
+                        }
+
+                        startApplication(kodein)
+                    </code></pre>
+                    <div class="links">
+                        <a href="http://kodein.org/Kodein-DI/index.html?latest/core#_dependency_injection_retrieval">CLASSIC KODEIN CONTAINED DOCUMENTATION</a>
+                    </div>
+                </div>
+                <div class="choice">
+                    <h3>GLOBAL</h3>
+                    <pre><code class="kotlin">
+                        kodein.global.addModule(uiModule)
+                        kodein.global.addModule(businessModule)
+
+                        startApplication()
+                    </code></pre>
+                    <div class="links">
+                        <a href="http://kodein.org/Kodein-DI/index.html?latest/configurable#_the_god_complex_one_true_kodein">KODEIN GLOBAL DOCUMENTATION</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sample">
+            <h2>Your choice : injection or retrieval</h2>
+            <p>pass the dependencies by constructor or let the class get them</p>
+            <div class="choices">
+                <div class="choice">
+                    <h3>INJECTION</h3>
+                    <pre><code class="kotlin">
+                        class Controller(val service: IService)
+
+                        // Contained
+                        val ctrl = kodein.newInstance { Controller(instance()) }
+
+                        // Global
+                        val ctrl = kodein.global.newInstance { Controller(instance()) }
+                    </code></pre>
+                    <div class="links">
+                        <a href="http://kodein.org/Kodein-DI/index.html?latest/core#injection">INJECTION DOCUMENTATION</a>
+                    </div>
+                </div>
+                <div class="choice">
+                    <h3>RETRIEVAL (contained)</h3>
+                    <pre><code class="kotlin">
+                        class Controller(override val kodein: Kodein) : KodeinAware {
+                            val service: IService by instance()
+                        }
+
+                        val ctrl = Controller(kodein)
+                    </code></pre>
+                    <div class="links">
+                        <a href="http://kodein.org/Kodein-DI/index.html?latest/android">ANDROID DOCUMENTATION</a>
+                    </div>
+                </div>
+                <div class="choice">
+                    <h3>RETRIEVAL (global)</h3>
+                    <pre><code class="kotlin">
+                        class Controller() : KodeinGlobalAware {
+                            val service: IService by instance()
+                        }
+
+                        val ctrl = Controller()
+                    </code></pre>
+                    <div class="links">
+                        <a href="http://kodein.org/Kodein-DI/index.html?latest/android">ANDROID DOCUMENTATION</a>
+                        <a href="http://kodein.org/Kodein-DI/index.html?latest/configurable#_the_god_complex_one_true_kodein">KODEIN GLOBAL DOCUMENTATION</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sample">
+            <h2>Ready for Android</h2>
+            <p>with advanced Android Framework capabilities</p>
+            <div class="choices">
+                <div class="choice">
+                    <h3>CONTAINED</h3>
+                    <pre><code class="kotlin">
+                        class MyApplication : Application(), KodeinAware {
+                            override val kodein = Kodein.lazy {
+                                import(businessModule)
+                                import(androidModule(this@MyApplication))
+
+                                bind&lt;Controller&gt;()
+                                    with scoped(ActivityRetainedScope).singleton {
+                                        Controller(instance())
+                                    }
+                            }
+                        }
+
+                        class MyActivity : Activity(), KodeinAware {
+                            override val kodein by closestKodein()
+
+                            // retained between activity restarts
+                            val ctrl: Controller by instance()
+                        }
+
+                    </code></pre>
+                    <div class="links">
+                        <a href="http://kodein.org/Kodein-DI/index.html?latest/android">ANDROID DOCUMENTATION</a>
+                    </div>
+                </div>
+                <div class="choice">
+                    <h3>GLOBAL</h3>
+                    <pre><code class="kotlin">
+                        class MyApplication : Application() {
+                            override fun onCreate(savedInstanceState: Bundle?) {
+                                kodein.global.addModule(businessModule)
+                                kodein.global.addModule(androidModule(this))
+
+                                kodein.global.addConfiguration {
+                                    bind&lt;Controller&gt;()
+                                        with scoped(ActivityRetainedScope).singleton {
+                                            Controller(instance())
+                                        }
+                                }
+                            }
+                        }
+
+                        class MyActivity : Activity(), KodeinGlobalAware {
+                            // retained between activity restarts
+                            val ctrl: Controller by instance()
+                        }
+                    </code></pre>
+                    <div class="links">
+                        <a href="http://kodein.org/Kodein-DI/index.html?latest/android">ANDROID DOCUMENTATION</a>
+                        <a href="http://kodein.org/Kodein-DI/index.html?latest/configurable#_the_god_complex_one_true_kodein">KODEIN GLOBAL DOCUMENTATION</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sample">
+            <h2>Ready for Java</h2>
+            <p>for legacy code</p>
+            <div class="choices">
+                <div class="choice">
+                    <h3>RETRIEVAL</h3>
+                    <pre><code class="java">
+                        public class MyJavaController {
+                            private final IService service;
+
+                            public MyJavaClass(DKodein kodein) {
+                                ctrl = kodein.Instance(TT(IService.class), null);
+                            }
+                        }
+                    </code></pre>
+                    <pre><code class="kotlin">
+                        val controller = MyJavaController(kodein.direct)
+                    </code></pre>
+                    <div class="links">
+                        <a href="http://kodein.org/Kodein-DI/index.html?latest/core#_in_java">JAVA DOCUMENTATION</a>
+                    </div>
+                </div>
+                <div class="choice">
+                    <h3>JSR-330</h3>
+                    <pre><code class="java">
+                        public class MyJavaController {
+                            @Inject
+                            IService service;
+                        }
+                    </code></pre>
+                    <pre><code class="kotlin">
+                        val controller = MyJavaController()
+                        kodein.jx.inject(controller)
+                    </code></pre>
+                    <div class="links">
+                        <a href="http://kodein.org/Kodein-DI/index.html?latest/jsr330">JSR-330 DOCUMENTATION</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <span id="footer-shadow"></span>
+
+    <a id="kodein-koders"></a>
+    <div id="footer" class="small">
+        <h3>Built by</h3>
+        <div class="logo">
+            <img class="logo-img" alt="kodein logo" src="../imgs/logo-white.svg" />
+            <div>
+                <h1><a href="https://kodein.net">KODEIN<span>Koders</span></a></h1>
+                <h2>painless technology</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

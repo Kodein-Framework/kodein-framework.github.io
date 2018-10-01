@@ -1,9 +1,11 @@
 package org.kodein
 
 import org.w3c.dom.*
+import org.w3c.dom.events.Event
 import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.dom.addClass
+import kotlin.dom.createElement
 import kotlin.dom.removeClass
 import kotlin.math.max
 
@@ -21,13 +23,15 @@ fun main() {
     val headerTitle = document.querySelector("div#header div.logo h1")!! as HTMLElement
     val headerSubtitle = document.querySelector("div#header div.logo h2")!! as HTMLElement
 
+    val headerMaxHeight = headerDiv.dataset["height"]?.toInt() ?: 585
+
     var headerIsSmall = false
     fun setHeaderPos(isFirst: Boolean = false) {
-        if (isFirst || body.scrollTop < 585 || headerDiv.style.height != "40px") {
-            val height = max(40, 585 - body.scrollTop.toInt())
+        if (isFirst || body.scrollTop < headerMaxHeight || headerDiv.style.height != "40px") {
+            val height = max(40, headerMaxHeight - body.scrollTop.toInt())
             headerDiv.style.height = "${height}px"
-            val scroll = 585 - height
-            headerDiv.style.backgroundPosition = "center ${-(scroll / 2.9)}px"
+            val scroll = headerMaxHeight - height
+            headerDiv.style.backgroundPosition = "left ${-(scroll / 2.9)}px"
 
             if (height <= 165 && !headerIsSmall) {
                 headerIsSmall = true
@@ -55,10 +59,10 @@ fun main() {
     setHeaderPos(true)
 
 
-    val platformsDiv = document.querySelector("div#platforms")!! as HTMLElement
+    val platformsDiv = document.querySelector("div#platforms") as? HTMLElement
 
     fun setPlatformsPos() {
-        if (body.scrollTop < 585 * 2) {
+        if (platformsDiv != null && body.scrollTop < 585 * 2) {
             platformsDiv.style.bottom = "calc(3em - ${body.scrollTop / 4.5}px)"
         }
     }
@@ -120,19 +124,21 @@ fun main() {
     setbuiltByPos()
 
 
-    document.onscroll = {
+    fun setAllPos() {
         setHeaderPos()
         setPlatformsPos()
         setFooterPos()
         setbuiltByPos()
     }
 
+    document.onscroll = { setAllPos() }
+
     @Suppress("UNCHECKED_CAST")
     val anchors = document.querySelectorAll("a.goto").asList().map {
         it as HTMLAnchorElement
         val id = it.href.substringAfter('#')
         if (id.isBlank()) {
-            it to { 200.0 }
+            it to { (headerMaxHeight / 3).toDouble() }
         }
         else {
             val anchor = document.getElementById(id) as HTMLElement
@@ -160,4 +166,33 @@ fun main() {
         }
     }
     checkOffset()
+
+    document.getElementsByTagName("code").asList().forEach {
+        it.textContent = it.textContent?.trimIndent()
+        window["hljs"].highlightBlock(it)
+        Unit
+    }
+
+    document.getElementsByClassName("choices").asList().forEach { cont ->
+        val tabs = document.createElement("div") as HTMLDivElement
+        tabs.addClass("tabs")
+        val choices = cont.getElementsByClassName("choice").asList() as List<HTMLElement>
+        choices.forEachIndexed { i, choice ->
+            choice as HTMLDivElement
+            if (i > 0)
+                choice.style.display = "none"
+            val title = choice.getElementsByTagName("h3")[0]!! as HTMLElement
+            tabs.append(title)
+            title.addEventListener("click", {
+                choices.forEach { it.style.display = "none" }
+                choice.style.display = "flex"
+                tabs.children.asList().forEach { it.removeClass("selected") }
+                title.addClass("selected")
+                setAllPos()
+            })
+        }
+        (tabs.firstChild!! as HTMLElement).addClass("selected")
+        cont.prepend(tabs)
+    }
+
 }
