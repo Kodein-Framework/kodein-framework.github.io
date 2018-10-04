@@ -441,7 +441,7 @@ span#footer-shadow {
     margin: 46px 0 0 0;
   }
 }
-@media (max-width: 450px) {
+@media (max-width: 360px) {
   div#strip {
     display: none !important;
   }
