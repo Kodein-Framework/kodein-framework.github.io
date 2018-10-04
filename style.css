@@ -441,7 +441,7 @@ span#footer-shadow {
     margin: 46px 0 0 0;
   }
 }
-@media (max-width: 360px) {
+/* @media (max-width: 360px) {
   div#strip {
     display: none !important;
   }
@@ -458,6 +458,6 @@ span#footer-shadow {
     font-size: 3em;
     text-align: center;
   }
-}
+} */
 
 /*# sourceMappingURL=style.css.map */
