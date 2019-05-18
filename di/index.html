@@ -58,7 +58,7 @@
 
                 // declare bindings
                 val kodein = Kodein {
-                    bind() from singleton { Controler(instance()) }
+                    bind() from singleton { Controller(instance()) }
                     bind&lt;IService&gt;() with singleton { BusinessService() }
                 }
             </code></pre>
@@ -74,7 +74,7 @@
             <pre><code class="kotlin">
                 // ui/module.kt
                 val uiModule = Kodein.Module {
-                    bind() from singleton { Controler(instance()) }
+                    bind() from singleton { Controller(instance()) }
                 }
 
                 // business/module.kt
